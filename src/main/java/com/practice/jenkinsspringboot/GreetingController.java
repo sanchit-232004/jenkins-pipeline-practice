@@ -1,3 +1,4 @@
+
 package com.practice.jenkinsspringboot;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +14,8 @@ public class GreetingController {
     }
 
     @GetMapping("/api/greet")
-    public String greet(@RequestParam(defaultValue = "Developer") String name) {
-        String cleanName = name.trim();
-        if (cleanName.isEmpty()) {
-            cleanName = "Developer";
-        }
-        return "Hello, " + cleanName + "! Welcome to Jenkins Pipeline Practice.";
+    public String greet(
+            @RequestParam(defaultValue = "Developer") String name) {
+        return "Hello, " + name + "! CI/CD pipeline is now implemented";
     }
 }
