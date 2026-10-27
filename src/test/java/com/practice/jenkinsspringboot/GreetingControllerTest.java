@@ -29,7 +29,7 @@ class GreetingControllerTest {
         mockMvc.perform(get("/api/greet").param("name", "Sanchit"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
-                        "Hello, Sanchit! Welcome to Jenkins Pipeline Practice."));
+                        "Hello, Sanchit! CI/CD pipeline is now implemented."));
     }
 
     @Test
@@ -37,6 +37,6 @@ class GreetingControllerTest {
         mockMvc.perform(get("/api/greet"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
-                        "Hello, Developer! Welcome to Jenkins Pipeline Practice."));
+                        "Hello, Developer! CI/CD pipeline is now implemented."));
     }
 }
