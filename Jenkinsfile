@@ -55,6 +55,27 @@ pipeline {
         '''
     }
 }
+
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    export PATH="/Users/sanchitbhaskarbadwaik/.docker/bin:/Applications/Docker.app/Contents/Resources/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
+                    kubectl config current-context
+                    kubectl get deployments
+
+                    kubectl set image deployment/springboot-deployment \
+                        springboot-container="$IMAGE_NAME:$BUILD_NUMBER"
+
+                    kubectl rollout status deployment/springboot-deployment \
+                        --timeout=120s
+
+                    kubectl get pods
+                '''
+            }
+        }
+
     }
 
     post {
