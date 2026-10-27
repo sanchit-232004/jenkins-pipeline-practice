@@ -1,47 +1,57 @@
+
 pipeline {
     agent any
-
-    options {
-        timestamps()
-    }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Jenkins has checked out the source from SCM.'
+                echo 'Source code checked out from GitHub'
             }
         }
 
         stage('Verify Java and Maven') {
             steps {
-                sh 'java -version'
-                sh 'mvn -version'
+                sh '''
+                    export PATH="/opt/homebrew/bin:$PATH"
+                    java -version
+                    mvn -version
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn -B clean test'
+                sh '''
+                    export PATH="/opt/homebrew/bin:$PATH"
+                    mvn -B clean test
+                '''
             }
         }
 
         stage('Package') {
             steps {
-                sh 'mvn -B package -DskipTests'
+                sh '''
+                    export PATH="/opt/homebrew/bin:$PATH"
+                    mvn -B package -DskipTests
+                '''
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
-            junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
+            junit allowEmptyResults: true,
+                  testResults: 'target/surefire-reports/*.xml'
         }
+
         success {
-            echo 'Spring Boot pipeline completed successfully!'
+            archiveArtifacts artifacts: 'target/*.jar',
+                             fingerprint: true
+            echo 'Build completed successfully!'
         }
+
         failure {
-            echo 'Pipeline failed. Open Console Output and inspect the first error.'
+            echo 'Build failed. Check the Console Output.'
         }
     }
 }
