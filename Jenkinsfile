@@ -2,6 +2,11 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER = '/Users/sanchitbhaskarbadwaik/.docker/bin/docker'
+        IMAGE_NAME = 'jenkins-springboot-practice'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -36,6 +41,17 @@ pipeline {
                 '''
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    "$DOCKER" version
+                    "$DOCKER" build \
+                        -t "$IMAGE_NAME:$BUILD_NUMBER" \
+                        -t "$IMAGE_NAME:latest" .
+                '''
+            }
+        }
     }
 
     post {
@@ -47,11 +63,11 @@ pipeline {
         success {
             archiveArtifacts artifacts: 'target/*.jar',
                              fingerprint: true
-            echo 'Build completed successfully!'
+            echo 'Build, tests, packaging, and Docker image build completed!'
         }
 
         failure {
-            echo 'Build failed. Check the Console Output.'
+            echo 'Pipeline failed. Check the Console Output.'
         }
     }
 }
