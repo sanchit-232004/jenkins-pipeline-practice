@@ -43,15 +43,18 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
-                sh '''
-                    "$DOCKER" version
-                    "$DOCKER" build \
-                        -t "$IMAGE_NAME:$BUILD_NUMBER" \
-                        -t "$IMAGE_NAME:latest" .
-                '''
-            }
-        }
+    steps {
+        sh '''
+            export PATH="/Users/sanchitbhaskarbadwaik/.docker/bin:/Applications/Docker.app/Contents/Resources/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
+            "$DOCKER" version
+
+            "$DOCKER" build \
+                -t "$IMAGE_NAME:$BUILD_NUMBER" \
+                -t "$IMAGE_NAME:latest" .
+        '''
+    }
+}
     }
 
     post {
